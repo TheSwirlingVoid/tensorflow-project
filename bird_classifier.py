@@ -90,15 +90,23 @@ def main() -> None:
                 "archive/train",
                 label_mode="categorical",
                 batch_size=net.get_batch_size(),
-                image_size=(224,224), 
+                image_size=input_shape[:2], 
             ) 
 
     test = utils.image_dataset_from_directory(
                 "archive/test",
                 label_mode="categorical",
                 batch_size=net.get_batch_size(),
-                image_size=(224,224), 
+                image_size=input_shape[:2], 
             )
+
+    rotation = Sequential([
+        layers.RandomRotation(0.125, fill_mode="constant", input_shape=input_shape)
+    ])
+
+    rotated = train.map(lambda train, sol: (rotation(train), sol))
+
+    train.concatenate(rotated)
 
     train = train.cache().prefetch(buffer_size=data.AUTOTUNE)
     test = test.cache().prefetch(buffer_size=data.AUTOTUNE)
@@ -112,7 +120,7 @@ def main() -> None:
             validation_batch_size=32,
             callbacks=[
                     callbacks.ModelCheckpoint(
-                        "checkpoints/checkpoints_{epoch:02f}",
+                        "checkpoints/450classes/checkpoints_{epoch:02f}",
                         verbose=2,
                         save_freq="epoch"
                     )
