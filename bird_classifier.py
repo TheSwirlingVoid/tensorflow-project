@@ -6,7 +6,7 @@ class Net():
     def __init__(self, input_shape) -> None:
         self.BATCH_SIZE = 32
         self.INPUT_SHAPE = input_shape
-        self.LEARNING_RATE = 0.0001
+        self.LEARNING_RATE = 0.001
 
         self.__setup_model()
 
@@ -53,10 +53,10 @@ class Net():
 
         self.model.add(layers.Flatten())
 
-        # self.model.add(layers.Dense(
-        #         4096,
-        #         activation="relu"
-        #     ))
+        self.model.add(layers.Dense(
+                4096,
+                activation="relu"
+            ))
 
         self.model.add(layers.Dense(
                 1024,
@@ -65,8 +65,12 @@ class Net():
 
         self.model.add(layers.Dense(
                 450,
-                activation="softmax"
+                activation="relu"
             ))
+        # self.model.add(layers.Dense(
+        #         20,
+        #         activation="softmax"
+        #     ))
 
         self.loss = losses.CategoricalCrossentropy()
         self.optimizer = optimizers.SGD(learning_rate=self.LEARNING_RATE)
@@ -94,7 +98,7 @@ def main() -> None:
             ) 
 
     test = utils.image_dataset_from_directory(
-                "archive/test",
+                "archive/valid",
                 label_mode="categorical",
                 batch_size=net.get_batch_size(),
                 image_size=input_shape[:2], 
@@ -117,10 +121,10 @@ def main() -> None:
             epochs=300,
             verbose=1,
             validation_data=test,
-            validation_batch_size=32,
+            validation_batch_size=net.get_batch_size(),
             callbacks=[
                     callbacks.ModelCheckpoint(
-                        "checkpoints/450classes/checkpoints_{epoch:02f}",
+                        "checkpoints/higherdenselayers/checkpoints_{epoch:02f}",
                         verbose=2,
                         save_freq="epoch"
                     )
