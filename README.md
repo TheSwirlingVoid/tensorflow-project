@@ -1,4 +1,6 @@
-My tensorflow ML project. This in theory should've classified images of birds among 450 possible classes, but the model right now is ridiculously horrible.
+# My tensorflow project
+
+This in theory should've classified images of birds among 450 possible classes, but the model right now is ridiculously horrible.
 
 Here is how I am meeting the requirements:
 
