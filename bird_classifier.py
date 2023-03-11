@@ -1,5 +1,6 @@
 from tensorflow import keras, zeros, data
 from keras import layers, utils, Sequential, losses, optimizers, callbacks
+import pickle
 
 class Net():
 
@@ -103,6 +104,9 @@ def main() -> None:
                 batch_size=net.get_batch_size(),
                 image_size=input_shape[:2], 
             )
+    
+    # with open("checkpoints/450classes/class_names.data", "wb") as f:
+    #     pickle.dump(train.class_names, f)
 
     rotation = Sequential([
         layers.RandomRotation(0.125, fill_mode="constant", input_shape=input_shape)
@@ -115,6 +119,7 @@ def main() -> None:
     train = train.cache().prefetch(buffer_size=data.AUTOTUNE)
     test = test.cache().prefetch(buffer_size=data.AUTOTUNE)
 
+    # net.model.save("temp/model")
     net.model.fit(
             train,
             batch_size=net.get_batch_size(),

@@ -15,10 +15,10 @@ def main() -> None:
 	if to_add > 0:
 		if (to_add < num_images):
 			to_alter = images[:to_add]
-        elif (to_add >= num_images):
-            for i in range(to_add):
-                base_idx = i % num_images
-                to_alter.append(randomly_altered(images[base_idx]))
+		elif (to_add >= num_images):
+			for i in range(to_add):
+				base_idx = i % num_images
+				to_alter.append(randomly_altered(images[base_idx]))
                 
 main()
 
