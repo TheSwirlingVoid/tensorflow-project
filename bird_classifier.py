@@ -1,6 +1,8 @@
+from keras.saving.legacy.saved_model.utils import keras_option_scope
 from tensorflow import keras, zeros, data
 from keras import layers, utils, Sequential, losses, optimizers, callbacks
 import pickle
+import cv2
 
 class Net():
 
@@ -8,6 +10,7 @@ class Net():
         self.BATCH_SIZE = 32
         self.INPUT_SHAPE = input_shape
         self.LEARNING_RATE = 0.001
+        # self.LEARNING_RATE = 1
 
         self.__setup_model()
 
@@ -66,7 +69,7 @@ class Net():
 
         self.model.add(layers.Dense(
                 450,
-                activation="relu"
+                activation="softmax"
             ))
         # self.model.add(layers.Dense(
         #         20,
@@ -74,7 +77,9 @@ class Net():
         #     ))
 
         self.loss = losses.CategoricalCrossentropy()
-        self.optimizer = optimizers.SGD(learning_rate=self.LEARNING_RATE)
+        # self.optimizer = optimizers.SGD(learning_rate=self.LEARNING_RATE)
+        # Adam is literally over a hundred times better. Thanks Adam!
+        self.optimizer = optimizers.Adam(learning_rate=self.LEARNING_RATE)
 
         self.model.compile(
                 loss=self.loss,
@@ -129,7 +134,7 @@ def main() -> None:
             validation_batch_size=net.get_batch_size(),
             callbacks=[
                     callbacks.ModelCheckpoint(
-                        "checkpoints/higherdenselayers/checkpoints_{epoch:02f}",
+                        "checkpoints/noaugmentation/checkpoints_{epoch:02f}",
                         verbose=2,
                         save_freq="epoch"
                     )

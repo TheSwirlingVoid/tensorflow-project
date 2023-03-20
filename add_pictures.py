@@ -1,5 +1,9 @@
 import os
 import cv2
+import random
+import numpy as np
+from numpy.core.multiarray import ndarray
+from numpy.random.mtrand import randint
 
 N = 200
 
@@ -22,5 +26,25 @@ def main() -> None:
                 
 main()
 
-def randomly_altered(image):
-    pass
+def randomly_altered(image) -> "ndarray":
+    alterations = get_alterations()
+    random_selection = random.randint(0,len(alterations))
+    filter_function = alterations[random_selection]
+    return filter_function
+
+def get_alterations() -> list:
+    filters = []
+
+    filters.append(
+            lambda im: cv2.GaussianBlur(im, (5,5), 0)
+            )
+
+    filters.append(
+            lambda im: cv2.dilate(
+                im,
+                np.ones((5,5), np.uint8),
+                iterations = 1
+                )
+            )
+
+    return filters
